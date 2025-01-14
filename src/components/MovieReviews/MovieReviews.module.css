@@ -1,0 +1,31 @@
+.reviews_section {
+
+}
+
+.reviews_list {
+    list-style-type: none;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+.review_item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  box-shadow: 0 6px 5px rgba(72, 57, 57, 0.1);
+  align-items: flex-start;
+  margin-top: 16px;
+  background-color: #af8266;
+}
+
+
+  
+  .text {
+    color: white;
+  }
+

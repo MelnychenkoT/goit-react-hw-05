@@ -10,6 +10,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-style: normal;
   color: #000;
+  background-color: #C0AB8E;
 }
 
 button {
@@ -28,7 +29,7 @@ p {
 
 a {
   text-decoration: none;
-}
+  color: inherit;}
 
 ul,
 ol {

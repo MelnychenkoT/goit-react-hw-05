@@ -1,0 +1,27 @@
+.navigation {
+  top: 0;          
+  left: 0;
+  right: 0;
+  background-color:#6C4F3D; 
+  padding: 10px ;    
+  color: #333;
+  
+    a {
+      color: rgb(11, 10, 10);
+      font-weight: bold;
+      text-decoration: none;
+      padding-right: 15px;
+    }
+    .active {
+      text-decoration: none;
+      color:beige;
+    }
+  }
+
+.logo {
+  padding-bottom: 15px;
+  font-size: xx-large;
+  color:black
+}
+
+

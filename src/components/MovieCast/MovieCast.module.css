@@ -1,0 +1,29 @@
+.cast_section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  }
+
+.cast_list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.actor_card {
+  display: block;      
+  align-items: center;
+  width: 120px;
+  background-color: #af8266;
+  border-radius: 10px;
+}
+      
+
+.actor_image {
+width: 100%;
+border-radius: 8px;
+object-fit: cover;
+margin-bottom: 10px;
+}
