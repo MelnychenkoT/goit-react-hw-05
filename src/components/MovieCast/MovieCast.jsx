@@ -1,36 +1,57 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { fetchCast, fetchPosters } from "../../services/api";
 import s from "./MovieCast.module.css";
-// import Loader from "../Loader/Loader";
+import Loader from "../Loader/Loader";
 
 const MovieCast = () => {
   const { movieId } = useParams();
-  const [cast, setCast] = useState([]);
+  const [casts, setCasts] = useState([]);
+  const [baseUrl, setBaseUrl] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchCast = async () => {
-      const url = `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=af069d5a4aa6dab18750675f951f88b6`;
-
+    const getCasts = async () => {
       try {
-        const response = await axios.get(url);
-        
-        const limitedCast = response.data.cast.slice(0, 9); 
-        setCast(limitedCast);
-      } catch (error) {
-        console.error('Error fetching cast:', error);
+        setLoading(true);
+        const [posterBaseUrl, castData] = await Promise.all([
+          fetchPosters(),
+          fetchCast(movieId),
+        ]);
+        setBaseUrl(posterBaseUrl);
+        setCasts(castData);
+      } catch {
+        setError("Failed to fetch movie cast");
+      } finally {
+        setLoading(false);
       }
     };
-
-    fetchCast();
+    getCasts();
   }, [movieId]);
+
+  if (loading) {
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  if (!casts || casts.length === 0) {
+    return <div>No cast info found for this movie.</div>;
+  }
 
   return (
     <div className={s.cast_section}>
       
-      {cast.length ? (
+      {casts.length ? (
         <div className={s.cast_list}>
-          {cast.map((actor) => (
+          {casts.map((actor) => (
             <div key={actor.id} className={s.actor_card}>
               <img
                 src={`https://image.tmdb.org/t/p/w500${actor.profile_path}`}

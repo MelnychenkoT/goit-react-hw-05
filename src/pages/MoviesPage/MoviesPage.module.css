@@ -9,3 +9,19 @@
   margin-left: 10px;  
 }
 
+.btn {
+  background-color: #af8266;
+  color: #333;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;  
+  font-size: 16px;
+  margin-left: 10px;  
+}
+
+.btn:hover {
+border: 5px;
+border-color: #333;
+background-color: #f7d0b8cc;}
+

@@ -1,50 +1,75 @@
-import { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate, Route, Routes } from 'react-router-dom';
-import axios from 'axios';
+import { useEffect, useState, useRef } from 'react';
+import { useParams, Link, Route, Routes, useLocation } from 'react-router-dom';
+import { fetchMoviesDetails } from "../../services/api";
 import s from "./MovieDetailsPage.module.css";
+import Loader from "../../components/Loader/Loader";
 import MovieCast from '../../components/MovieCast/MovieCast';
 import MovieReviews from '../../components/MovieReviews/MovieReviews';
 
+
 const MovieDetailsPage = () => {
   const { movieId } = useParams();
-  const [movie, setMovie] = useState(null);
-  const navigate = useNavigate();
-
+  const [movieDetails, setMovieDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const location = useLocation();
+  const goBackLink = useRef(location.state ?? `/movies`);
 
   useEffect(() => {
-    const fetchMovieDetails = async () => {
-      const url = `https://api.themoviedb.org/3/movie/${movieId}?api_key=af069d5a4aa6dab18750675f951f88b6&language=en-US`;
-
+    const getMovieDetails = async () => {
       try {
-        const response = await axios.get(url);
-        setMovie(response.data);
-      } catch (error) {
-        console.error('Error fetching movie details:', error);
+        setLoading(true);
+        const data = await fetchMoviesDetails(movieId);
+        setMovieDetails(data);
+      } catch {
+        setError("Failed to fetch movie details.");
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchMovieDetails();
+    getMovieDetails();
   }, [movieId]);
 
-  if (!movie) return <p>Loading...</p>;
+  if (loading) {
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
+  }
 
-  const imageUrl = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+  if (error) {
+    return <div className={s.error}>{error}</div>;
+  }
 
-  const handleGoBack = () => {
-    navigate(-1);
-  };
+  if (!movieDetails) {
+    return <div>No movie details found.</div>;
+  }
+
+  const {
+    title,
+    vote_average,
+    overview,
+    genres,
+    posterUrl,
+  } = movieDetails;
 
   return (
     <div className={s.movie_details}>
-      <button onClick={handleGoBack} className={s.btn}>Go Back</button>
-      
+      <Link to={goBackLink.current}>
+        <button className={s.btn} type="button">
+          Go back
+        </button>
+      </Link>
+
       <div className={s.details_container}>
-        <img src={imageUrl} alt={movie.title} className={s.movie_poster}/>
+        <img src={posterUrl} alt={title} className={s.movie_poster}/>
         <div className={s.movie_info}>
-          <h1>{movie.title}</h1>
-          <p><strong>Rating:</strong> {movie.vote_average} / 10</p>
-          <p><strong>Overview:</strong> {movie.overview}</p>
-          <p><strong>Genres:</strong> {movie.genres ? movie.genres.map(genre => genre.name).join(', ') : 'N/A'}</p>
+          <h1>{title}</h1>
+          <p><strong>Rating:</strong> {vote_average} / 10</p>
+          <p><strong>Overview:</strong> {overview}</p>
+          <p><strong>Genres:</strong> {genres ? genres.map(genre => genre.name).join(', ') : 'N/A'}</p>
         </div>
       </div>
 
